@@ -1,0 +1,97 @@
+<!doctype html>
+<html ng-app="vdb">
+  <head>
+    <title> Visual DataBase </title>
+    <!-- Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <!--<script src ="angular-1.3.13/angular.min.js"></script>-->
+    <script src ="js/jquery-1.11.2.js"></script>
+    <script src ="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <!-- My External Files -->
+    <script src="js/vdb.js"></script>
+
+  </head>
+  <body>
+    <h1> Visual DB </h1>
+
+    <div class="btn-group" >
+      <label class="btn btn-primary">
+        <input type="radio" name="options" id="option1" autocomplete="off"
+        data-toggle="collapse" data-target="#collapseQuery" aria-expanded="false" aria-controls="collapseQuery"> Enter Query
+      </label>
+
+      <label class="btn btn-primary">
+        <input type="radio" name="options" id="option2" autocomplete="off"
+          data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm"> Form Query
+      </label>
+
+      <label class="btn btn-primary">
+        <input type="radio" name="options" id="option3" autocomplete="off"> Draw Query
+      </label>
+
+    </div>
+
+    <script src="js/query_collapse.js"></script>
+
+    <div class="collapse" id="collapseQuery">
+      <label> Enter Query</label>
+      <input type="text" ng-model="query" placeholder="Enter query"
+      <hr>
+      <h1> Query is: {{query}} </h1>
+    </div>
+
+    <div class="collapse" id="collapseForm" ng-controller="formController">
+      <form = ng-submit="enterForm()">
+        Select the database table you are interested in:
+        <select id="db-select">
+        </select>
+        <br>
+
+        <div id="columns">
+          Select the columns you are interested in:
+          <select id="col0">
+          </select>
+          <button type="button" id="addCol" class="btn btn-primary btn-xs"> Add column </button>
+        </div>
+
+        <div id="conditions">
+          Pick your conditions. Column:
+          <select id="condCol0"> <!--A-->
+          </select>
+          <select id="field0"> <!--A.toys-->
+          </select>
+          <select id="operator"> <!--A.toys = -->
+          </select>
+          <select id="condCol1"> <!-- A.toys = B -->
+          </select>
+          <select id="field1"> <!-- A.toys = B.toys -->
+          </select>
+          <select id="operator"> <!--(A.toys = B.toys) AND -->
+          </select>
+
+        </div>
+
+        <button class="btn btn-warning" type="submit" id="SubmitUserInfo" value = "Submit" onclick="enterQuery()">Submit</button>
+      </form>
+      <ul style="list-style: none;">
+        <li ng-repeat="col in cols">
+          {{col.text}}
+        </li>
+      </ul>
+    </div>
+
+    <script src ="js/form.js"></script>
+    <script>
+      load_form();
+    </script>
+
+
+    <div id="chart_div"></div>
+    <script src= "js/charts.js"></script>
+  </body>
+</html>
