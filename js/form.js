@@ -3,6 +3,10 @@ var tableNames = ["DbTable1", "DbTable2", "DbTable3"]; //get from backend (Java?
 var operators = ["equals","not equals"];
 var logic = ["AND","OR"];
 var field = ["1","2","3","4"]
+
+var temp_data_db1 = [21,12,15,19,13,29,30,40,20]
+var temp_data_db2 = [2,31,14,33,23,22,11,55,22]
+var temp_data_db3 = [12,22,33,44,51,41,21,12]
 var columnNum = 0;
 var condColNum = 0;
 function load_form(FBID) {
