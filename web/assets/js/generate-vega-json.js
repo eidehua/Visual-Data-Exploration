@@ -70,6 +70,68 @@ function createJSON(){
   return json;
 }
 
+function createBlank(){
+  var json = {};
+  json["width"] = width;
+  json["height"] = 200;
+  var padding= {"top": padding_top, "left": padding_left, "bottom": padding_bottom, "right": padding_right};
+  json["padding"] = padding;
+
+  //data----
+  var data = [    {
+      "name": "table",
+      "values": [
+        {
+          "x": 100,
+          "y": 100
+        }
+      ]
+    }];
+  json["data"] = data;
+
+  json["scales"] = [
+    {
+      "name": "x",
+      "nice": true,
+      "range": "width",
+      "domain": {"data": "table", "field": "data.x"}
+    },
+    {
+      "name": "y",
+      "range": "height",
+      "nice": true,
+      "domain": {"data": "table", "field": "data.y"}
+    }
+  ];
+
+  json["axes"] =  [
+    {"type": "x", "scale": "x"},
+    {"type": "y", "scale": "y"}
+  ];
+
+  json["marks"] =  [
+    {
+      "type": "rect",
+      "from": {"data": "table"},
+      "properties": {
+        "enter": {
+          "x": {"scale": "x", "field": ""},
+          "width": {"scale": "x", "offset": -1},
+          "y": {"scale": "y", "field": ""},
+          "y2": {"scale": "y", "value": 0}
+        },
+        "update": {
+          "fill": {"value": "steelblue"}
+        },
+        "hover": {
+          "fill": {"value": "red"}
+        }
+      }
+    }
+  ];
+  return json;
+}
+
 function testVega(){
   spec1 = createJSON();
   vg.parse.spec(spec1, function(chart) {
@@ -78,5 +140,13 @@ function testVega(){
     hover: false
   }).update();
 });
-
+}
+function blankChart(){
+  spec1 = createBlank();
+  vg.parse.spec(spec1, function(chart) {
+  self.view1 = chart({
+    el: "#blankChart",
+    hover: false
+  }).update();
+});
 }

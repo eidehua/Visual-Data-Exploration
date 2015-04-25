@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="vdb">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Ming Han Teh and Edward Xue">
+
+    <title>Visual Data Exploration</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="dist/css/bootstrap.css" rel="stylesheet">
+    <link href="dist/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="dist/css/bootstrap-theme.min.css">
+
+    <!-- Custom styles for this template -->
+    <link href="custom.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.js"></script>
+      <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Liraries required to load -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script src="assets/js/jquery.js"></script>
+
+    <link href="assets/magicsuggest/magicsuggest-min.css" rel="stylesheet">
+    <!-- My External Files -->
+    <script src= "assets/js/charts.js"></script>
+    <script src="assets/js/vdb.js"></script>
+
+    <!-- Vega Files -->
+    <script src="vega-master/examples/lib/d3.v3.min.js"></script>
+    <script src="vega-master/vega.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Visual Data Exploration</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+   <div id="toolbox">
+        <strong></strong>
+
+        <script src="assets/js/query_collapse.js">
+        //Need to load script after these inputs are defined
+        </script>
+
+        <!-- Create Query -->
+        <div class="collapse in" id="collapseForm" ng-controller="formController">
+          <form = ng-submit="enterForm()">
+            <!--
+            Select the database table you are interested in:
+            <select id="db-select">
+            </select> -->
+          <!--  <select id="method_combobox">
+              <option value="outlier">Outlier</option>
+              <option value="similairty">Similarity Search</option>
+              <option value="representatives">Representatives</option>
+            </select> -->
+
+            <div id="method_combobox">
+            </div>
+            <br>
+            <div id="outlier_combobox">
+            </div>
+
+            <br>
+            <!-- Bootstrap grid system -->
+            <div class="row">
+              <div class="col-md-2">
+                <br>
+                <div id="y_aggregate_combobox"></div>
+                <br>
+                <div id="y_combobox"></div>
+              </div>
+              <div  class="col-md-4" id="blankChart"></div>
+            </div>
+            <div class="row">
+              <div class="col-md-2"> </div>
+
+              <div class="col-md-5">
+                <div id="x_combobox"></div>
+              </div>
+
+              <div class="col-md-5"></div>
+            </div>
+
+            <br>
+
+            <h3> Predicates </h3>
+            <table id="predicates" class="table table-striped">
+              <tr>
+                <th>Column Name</th>
+                <th>Operator</th>
+                <th>Value</th>
+              </tr>
+              <tr>
+                <td>
+                  <div>
+                    <div id="pred_col0"></div>
+                  </div>
+                </td>
+                <td>
+                  <div id="pred_cond0"></div>
+                </td>
+                <td>
+                  <input type="text" id="pred_value0" placeholder="Value">
+                </td>
+              </tr>
+            </table>
+            <button type="button" class="btn btn-default btn-sm">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+
+            <br>
+            <button class="btn btn-warning" type="submit" id="SubmitUserInfo" value = "Submit" onclick="enterQuery()">Submit</button>
+          </form>
+        </div>
+        <script src ="assets/js/form.js"></script>
+        <script>
+          //loads the js related to the form/create query
+          load_form();
+        </script>
+
+        <button class="btn btn-warning" type="submit" id="vega" value = "Test Vega" onclick="testVega()">Test Vega</button>
+        <script src = "assets/js/generate-vega-json.js"></script>
+
+    </div> <!-- /container -->
+    <div>
+      <!-- Sample output from Angular after grabbing from form -->
+      <ul style="list-style: none;">
+        <li ng-repeat="col in cols">
+          {{col.text}}
+        </li>
+      </ul>
+      <!-- Sample output with Google Visualization -->
+      <div id="chart_div"></div>
+      <div id="view1" class="view"></div>
+
+      <div id="container1" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+    </div>
+     <div>
+      <div id="separator" style="clear:both; border-bottom:'1px solid black' auto"></div>
+    </div>
+    <div>
+      <div id="container2" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+    </div>
+      <div>
+      <div id="separator2" style="clear:both; border-bottom:'1px solid black' auto"></div>
+    </div>
+    <div>
+      <div id="container3" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+    </div>
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="dist/js/bootstrap.min.js"></script>
+
+    <script src="assets/js/highcharts/highcharts.js"></script>
+    <script src="assets/js/highcharts/exporting.js"></script>
+    <script src="assets/js/highcharts/adapt-chart-to-legend.js"></script>
+    <script src="dist/js/tooltip.js"></script>
+    <script src="underscore-min.js"></script>
+    <script src="underscore.string.min.js"></script>
+    <script src="backbone-min.js"></script>
+    <script src="utils.js"></script>
+    <script src="assets/magicsuggest/magicsuggest-min.js"></script>
+    <!--<script src="xdata.js"></script>-->
+    <script>
+      $(document).ready(function() {
+        // $('.query-box').tooltip();
+        blankChart();
+        add_operator(0);
+        add_attribute(0);
+        add_outlier_combobox();
+      });
+    </script>
+    <script>
+    function add_operator(num){
+      var ms_operator = $('#pred_cond'+num).magicSuggest({
+        placeholder: 'Select Operator',
+        allowFreeEntries: false,
+        data: ['=','!=','>','<','>=','<=','BETWEEN','LIKE','IN'],
+        maxSelection: 1,
+        required: true,
+        resultAsString: true
+        });
+    }
+    function add_attribute(num){
+      var ms_attribute = $('#pred_col'+num).magicSuggest({
+        placeholder: 'Select Attribute',
+        allowFreeEntries: false,
+        data: ['col1','col2','col3','col4','a','ab'],
+        maxSelection: 1,
+        required: true,
+        resultAsString: true
+        });
+    }
+    function add_outlier_combobox(){
+      var ms_outlier = $('#outlier_combobox').magicSuggest({
+        placeholder: 'Select Attribute',
+        allowFreeEntries: false,
+        data: ['out_col1','col2','col3','col4','a','ab'],
+        maxSelection: 10,
+        required: true,
+        resultAsString: true
+        });
+        $('#outlier_combobox').hide();
+    }
+    $(function() {
+      var ms_method = $('#method_combobox').magicSuggest({
+        placeholder: 'Select Method',
+        allowFreeEntries: false,
+        data: ['Outlier','Similarity Search','Representative'],
+        maxSelection: 1,
+        required: true,
+        resultAsString: true
+        });
+
+        $(ms_method).on(
+          'selectionchange', function(){
+             //alert(this.getValue());
+             if(this.getValue()=='Outlier'){
+               $('#outlier_combobox').show();
+             }
+             else{
+               $('#outlier_combobox').hide();
+             }
+          });
+
+        var y_aggr_ms = $('#y_aggregate_combobox').magicSuggest({
+          placeholder: 'Select Aggregate',
+          allowFreeEntries: false,
+          data: ['Average','Count','First','Last','Max','Min','Sum'],
+          maxSelection: 1,
+          required: true,
+          resultAsString: true,
+          maxSelectionRenderer: function(data){ return "One Aggregate Only";}
+          });
+        var y_ms = $('#y_combobox').magicSuggest({
+          placeholder: 'Select Y axis',
+          allowFreeEntries: false,
+          data: ['Col1','Col2','Col3','Col4','Col5'],
+          maxSelection: 1,
+          required: true,
+          resultAsString: true,
+          maxSelectionRenderer: function(data){return "One Column Only";}
+          });
+
+          var x_ms = $('#x_combobox').magicSuggest({
+            placeholder: 'Select X axis',
+            allowFreeEntries: false,
+            data: ['X_Col1','X_Col2','X_Col3','X_Col4','X_Col5'],
+            maxSelection: 1,
+            required: true,
+            resultAsString: true,
+            maxSelectionRenderer: function(data){return "One Column Only";}
+            });
+      });
+
+    </script>
+  </body>
+</html>
