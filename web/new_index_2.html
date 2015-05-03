@@ -77,7 +77,7 @@
             <div id="method_combobox">
             </div>
             <br>
-            <div id="outlier_combobox">
+            <div id="z_axis_combobox">
             </div>
 
             <br>
@@ -191,10 +191,11 @@
         blankChart();
         add_operator(0);
         add_attribute(0);
-        add_outlier_combobox();
+        add_z_axis_combobox();
       });
     </script>
     <script>
+    //Script For the comboboxes. Can refactor to separate js file later.
     function add_operator(num){
       var ms_operator = $('#pred_cond'+num).magicSuggest({
         placeholder: 'Select Operator',
@@ -215,8 +216,8 @@
         resultAsString: true
         });
     }
-    function add_outlier_combobox(){
-      var ms_outlier = $('#outlier_combobox').magicSuggest({
+    function add_z_axis_combobox(){
+      var ms_outlier = $('#z_axis_combobox').magicSuggest({
         placeholder: 'Select Attribute',
         allowFreeEntries: false,
         data: ['out_col1','col2','col3','col4','a','ab'],
@@ -224,7 +225,7 @@
         required: true,
         resultAsString: true
         });
-        $('#outlier_combobox').hide();
+        $('#z_axis_combobox').hide();
     }
     $(function() {
       var ms_method = $('#method_combobox').magicSuggest({
@@ -239,11 +240,11 @@
         $(ms_method).on(
           'selectionchange', function(){
              //alert(this.getValue());
-             if(this.getValue()=='Outlier'){
-               $('#outlier_combobox').show();
+             if(this.getValue()==''){
+               $('#z_axis_combobox').hide();
              }
              else{
-               $('#outlier_combobox').hide();
+               $('#z_axis_combobox').show();
              }
           });
 
