@@ -13,7 +13,7 @@ angular.module('vdb', [])
         var dropdown = $("#col"+i);
         //alert ($(dropdown).val());
         $rootScope.cols.push({text:$(dropdown).val()});
-        data.addRow([$(dropdown).val(), getData($(dropdown).val())]);
+        data.addRow([$(dropdown).val(), getvdbData($(dropdown).val())]);
       }
       drawChart(data);
 
@@ -37,7 +37,7 @@ angular.module('vdb', [])
   }]);
 
   //Simulates getting backend data
-  function getData(column){
+  function getvdbData(column){
     index = 0;
     if(column.indexOf("A")>-1){
       index = 1;

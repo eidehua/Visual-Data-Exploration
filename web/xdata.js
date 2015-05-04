@@ -1,4 +1,3 @@
-$(document).ready(function() {
 
   // Global constants
   var group = false;
@@ -108,7 +107,7 @@ $(document).ready(function() {
         }
       },
       series: all_series,
-      
+
     }
 
     return chart_data;
@@ -119,7 +118,7 @@ $(document).ready(function() {
   function processData(data) {
     console.log("start processing");
     var allcharts = [];
-    
+
     //var header = data[0];
     //var clusters = header.clusters;
     //data = data.slice(1);
@@ -131,7 +130,7 @@ $(document).ready(function() {
     clusters=[];
      for (var id=0; id<data.length; id++)
         clusters.push([id]);
-     
+
 
     var combine = false;
     var cmp_menu_items = [];
@@ -188,9 +187,9 @@ $(document).ready(function() {
             else if(text.indexOf("Representative") > -1)
                chart.appendTo('div#container2');
             else chart.appendTo('div#container3');
-            
-            
-            
+
+
+
           }
         });
         if (group) {
@@ -204,7 +203,7 @@ $(document).ready(function() {
     console.log(query);
     $('div#container').empty();
     $('#compare-menu').html('<li><a href="#" class="active" data-id="-1">Show All</a></li>');
-    $.get('/getdata', { sql: query, outlier_count: outlier_count, method: method}, processData, 'json')
+    $.get('/getdata', { sql: query, outlier_count: 3, method: method}, processesBackEndData, 'json')
       .fail(function() {
         console.log("Failed")
         alert('Request failed: /getdata');
@@ -243,10 +242,10 @@ $(document).ready(function() {
   }
 
   function getDataNow() {
-    getData($('input.query-box').val(),outlier_count,method);
+    getData("select uniqueCarrier,DayofMonth,avg(ArrDelay) from db.ontime group by uniqueCarrier,DayofMonth",outlier_count,method);
   }
 
-  getDataNow();
+  //getDataNow();
 
   $('#metric-menu > li > a').click(
     function(e) {
@@ -265,7 +264,7 @@ $(document).ready(function() {
       getDataNow();
     }
   );
-  
+
    $('#outlier_count-menu > li > a').click(
     function(e) {
       outlier_count = $(this).attr('data-metric');
@@ -277,7 +276,7 @@ $(document).ready(function() {
       getDataNow();
     }
   );
- 
+
     $('#method-menu > li > a').click(
     function(e) {
       method = $(this).attr('data-metric');
@@ -289,7 +288,7 @@ $(document).ready(function() {
       getDataNow();
     }
   );
-   
+
   function initCompareMenu() {
     $('#compare-menu > li > a').click(
       function(e) {
@@ -302,5 +301,3 @@ $(document).ready(function() {
       }
     );
   }
-
-});

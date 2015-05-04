@@ -138,7 +138,8 @@ function createScatter(){
   json["width"] = 200;
   json["height"] = 200;
   var padding= {"top": padding_top, "left": padding_left, "bottom": padding_bottom, "right": padding_right};
-  json["padding"] = padding;
+  //json["padding"] = padding;
+  //json["viewport"]=[width+50, height+50]
 
   //data----
   var data = [
@@ -377,6 +378,7 @@ function testVega(){
 });
 addChart();
 testScatter();
+testBackEnd();
 }
 function blankChart(){
   spec1 = createBlank();
@@ -402,5 +404,98 @@ var view_count = 1;
 function addChart(){
   var lastView = $("#view"+view_count++);
   var view = "view"+view_count;
-  lastView.after(" <div id="+ view+ " class='view'></div>")
+  lastView.after(" <div id="+ view+ " class='mod'></div>")
+}
+
+function testBackEnd(){
+  getDataNow();
+}
+
+function addGraph(data){
+  spec1 = createBarGraph(data);
+  var view = view_count;
+  vg.parse.spec(spec1, function(chart) {
+    chart({
+      el: "#view"+view,
+      hover: false
+    }).update();
+  });
+}
+
+function processesBackEndData(data) {
+  //Take json data
+  alert(data.length);
+  alert(data);
+  for(index = 0; index< data.length; index++){
+    //outer array => each entry is the data for a chart
+    addChart();
+    addGraph(data[index]);
+  }
+}
+
+//backend_data is a dictionary, has "x_type", "y_type", "data"
+function createBarGraph(backend_data){
+  var json = {};
+  json["width"] = width;
+  json["height"] = 200;
+  //json["viewport"]=[width+50, height+50]
+  var padding= {"top": padding_top, "left": padding_left, "bottom": padding_bottom, "right": padding_right};
+  //json["padding"] = padding;
+
+  //data----
+  var data = [];
+  var table_data = {"name":"table"};
+  var table_data_values = [];
+
+  var backend_values = backend_data["data"]; //array for backend_values
+
+  for(i=0; i<backend_values.length; i++){
+    table_data_values.push({"x":backend_values[i][0], "y": backend_values[i][1]});
+  }
+  table_data["values"]= table_data_values;
+  data.push(table_data);
+  json["data"] = data;
+  //end data-----
+
+  json["scales"] = [
+    {
+      "name": "x",
+      "type": "ordinal",
+      "range": "width",
+      "domain": {"data": "table", "field": "data.x"}
+    },
+    {
+      "name": "y",
+      "range": "height",
+      "nice": true,
+      "domain": {"data": "table", "field": "data.y"}
+    }
+  ];
+
+  json["axes"] =  [
+    {"type": "x", "scale": "x", "title": backend_data["x_type"]},
+    {"type": "y", "scale": "y", "title": backend_data["y_type"]}
+  ];
+
+  json["marks"] =  [
+    {
+      "type": "rect",
+      "from": {"data": "table"},
+      "properties": {
+        "enter": {
+          "x": {"scale": "x", "field": "data.x"},
+          "width": {"scale": "x", "band": true, "offset": -1},
+          "y": {"scale": "y", "field": "data.y"},
+          "y2": {"scale": "y", "value": 0}
+        },
+        "update": {
+          "fill": {"value": "steelblue"}
+        },
+        "hover": {
+          "fill": {"value": "red"}
+        }
+      }
+    }
+  ];
+  return json;
 }
