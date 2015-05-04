@@ -124,7 +124,7 @@
                 </td>
               </tr>
             </table>
-            <button type="button" class="btn btn-default btn-sm">
+            <button type="button" class="btn btn-default btn-sm" onclick="add_predicate()" value="Add Predicate">
               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             </button>
 
@@ -193,6 +193,49 @@
         add_attribute(0);
         add_z_axis_combobox();
       });
+    </script>
+    <tr>
+      <td>
+        <div>
+          <div id="pred_col0"></div>
+        </div>
+      </td>
+      <td>
+        <div id="pred_cond0"></div>
+      </td>
+      <td>
+        <input type="text" id="pred_value0" placeholder="Value">
+      </td>
+    </tr>
+    <script>
+      var predicate_count = 1;
+      function add_predicate(){
+        var table = document.getElementById('predicates');
+        var row = table.insertRow(table.rows.length);
+
+        var new_pred_col_cell =  row.insertCell(0);
+        var div = document.createElement('div');
+        var inner_div = document.createElement('div');
+        inner_div.id = "pred_col"+predicate_count;
+        div.appendChild(inner_div);
+        new_pred_col_cell.appendChild(div);
+        add_attribute(predicate_count);
+
+        var new_operator_col_cell = row.insertCell(1);
+        var div1 = document.createElement('div');
+        var inner_div1 = document.createElement('div');
+        inner_div1.id = "pred_cond"+predicate_count;
+        div1.appendChild(inner_div1);
+        new_operator_col_cell.appendChild(div1);
+        add_operator(predicate_count);
+
+        var new_value_col_cell = row.insertCell(2);
+        var input = document.createElement('input');
+        input.setAttribute('id', "pred_value"+predicate_count++);
+        input.setAttribute('placeholder', "Value");
+        new_value_col_cell.appendChild(input);
+
+      }
     </script>
     <script>
     //Script For the comboboxes. Can refactor to separate js file later.
